@@ -1,9 +1,10 @@
-FROM mcr.microsoft.com/playwright:v1.42.1-focal
+FROM jenkins/jenkins:lts
 
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
+USER root
 
-# The CMD runs the test and triggers the notification logic you wrote
-CMD ["npx", "playwright", "test"]
+# Install the Docker CLI
+RUN apt-get update && apt-get install -y docker.io
+
+# Switch back to the jenkins user for security, 
+# but keep it in the docker group to access the socket
+USER jenkins

@@ -1,21 +1,14 @@
 services:
   jenkins:
-    image: jenkins/jenkins:lts
+    build: .
     privileged: true
-    user: root
+    user: root # Keep as root for now to ensure socket permissions
     ports:
       - "8080:8080"
       - "50000:50000"
     volumes:
       - jenkins_data:/var/jenkins_home
       - /var/run/docker.sock:/var/run/docker.sock
-    # This line installs the Docker CLI inside the Jenkins container on startup
-    entrypoint: >
-      bash -c "
-      apt-get update && 
-      apt-get install -y docker.io && 
-      /usr/bin/tini -- /usr/local/bin/jenkins.sh
-      "
     restart: always
 
 volumes:
