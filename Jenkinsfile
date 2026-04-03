@@ -17,11 +17,17 @@ pipeline {
         stage('Build Playwright Image') {
             steps {
                 script {
-                    // Get the path to the docker tool we configured
+                    // 1. Locate the tool you defined in Global Tool Configuration
                     def dockerHome = tool name: 'docker', type: 'docker-tool'
                     
-                    // Add the tool's bin folder to the PATH for the following commands
-                    withEnv(["PATH+DOCKER=${dockerHome}/bin"]) {
+                    // 2. Wrap the docker command in an environment that knows where the 'docker' binary is
+                    // and knows how to talk to your 'docker' container (DinD)
+                    withEnv([
+                        "PATH+DOCKER=${dockerHome}/bin",
+                        "DOCKER_HOST=tcp://docker:2376",
+                        "DOCKER_TLS_VERIFY=1",
+                        "DOCKER_CERT_PATH=/certs/client"
+                    ]) {
                         sh 'docker build -t playwright-runner .'
                     }
                 }
