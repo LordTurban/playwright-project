@@ -17,7 +17,10 @@ pipeline {
         stage('Build Playwright Image') {
             steps {
                 script {
-                    docker.withServer('tcp://docker:2376', 'docker-certs') {
+                    // This matches the name you gave in Global Tool Configuration
+                    def dockerBinary = tool name: 'docker', type: 'docker-tool'
+                    
+                    withEnv(["PATH+DOCKER=${dockerBinary}/bin"]) {
                         sh 'docker build -t playwright-runner .'
                     }
                 }
