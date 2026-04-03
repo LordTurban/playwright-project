@@ -17,8 +17,9 @@ pipeline {
         stage('Build Playwright Image') {
             steps {
                 script {
-                    // Build the container inside the DinD environment
-                    sh "docker build -t playwright-runner ."
+                    docker.withServer('tcp://docker:2376', 'docker-certs') {
+                        sh 'docker build -t playwright-runner .'
+                    }
                 }
             }
         }
