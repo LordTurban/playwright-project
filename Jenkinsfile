@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     // This matches the name you gave in Global Tool Configuration
-                    def dockerBinary = tool name: 'docker', type: 'docker-tool'
+                    def dockerHome = tool 'docker'
                     
                     withEnv(["PATH+DOCKER=${dockerBinary}/bin"]) {
                         sh 'docker build -t playwright-runner .'
